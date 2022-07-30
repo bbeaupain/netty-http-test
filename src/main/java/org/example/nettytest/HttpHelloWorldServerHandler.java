@@ -1,5 +1,6 @@
 package org.example.nettytest;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -34,7 +35,7 @@ public class HttpHelloWorldServerHandler extends SimpleChannelInboundHandler<Htt
             HttpRequest req = (HttpRequest) msg;
 
             boolean keepAlive = HttpUtil.isKeepAlive(req);
-            FullHttpResponse response = new DefaultFullHttpResponse(req.protocolVersion(), OK, contentBuf.retainedDuplicate()));
+            FullHttpResponse response = new DefaultFullHttpResponse(req.protocolVersion(), OK, contentBuf.retainedDuplicate());
             response.headers()
                 .set(CONTENT_TYPE, TEXT_PLAIN)
                 .setInt(CONTENT_LENGTH, response.content().readableBytes());
