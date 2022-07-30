@@ -36,13 +36,13 @@ public final class HttpHelloWorldServer {
         }
 
         // Configure the server.
-        EventLoopGroup bossGroup = new IOUringEventLoopGroup(1);
-        EventLoopGroup workerGroup = new IOUringEventLoopGroup();
+        EventLoopGroup bossGroup = new EpollEventLoopGroup(1);
+        EventLoopGroup workerGroup = new EpollEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.option(ChannelOption.SO_BACKLOG, 1024);
             b.group(bossGroup, workerGroup)
-                .channel(IOUringServerSocketChannel.class)
+                .channel(EpollServerSocketChannel.class)
                 .childHandler(new HttpHelloWorldServerInitializer(sslCtx));
 
             Channel ch = b.bind(PORT).sync().channel();
