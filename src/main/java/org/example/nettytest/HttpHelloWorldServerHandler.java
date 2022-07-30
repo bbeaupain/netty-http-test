@@ -20,7 +20,8 @@ import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_PLAIN;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 
 public class HttpHelloWorldServerHandler extends SimpleChannelInboundHandler<HttpObject> {
-    private static final byte[] CONTENT = { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+    private static final byte[] content = { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+    private static final ByteBuf contentBuf = Unpooled.directBuffer(content.length).writeBytes(content);
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -33,8 +34,7 @@ public class HttpHelloWorldServerHandler extends SimpleChannelInboundHandler<Htt
             HttpRequest req = (HttpRequest) msg;
 
             boolean keepAlive = HttpUtil.isKeepAlive(req);
-            FullHttpResponse response = new DefaultFullHttpResponse(req.protocolVersion(), OK,
-                                                                    Unpooled.wrappedBuffer(CONTENT));
+            FullHttpResponse response = new DefaultFullHttpResponse(req.protocolVersion(), OK, contentBuf.retainedDuplicate()));
             response.headers()
                 .set(CONTENT_TYPE, TEXT_PLAIN)
                 .setInt(CONTENT_LENGTH, response.content().readableBytes());
